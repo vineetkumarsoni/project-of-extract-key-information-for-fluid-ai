@@ -1,0 +1,259 @@
+ need to come up with an algorithm that works which can take the following PDF and
+ extract key information from the same for an investor looking to evaluate the company.
+ The investor looks at key elements such as future growth prospects, key changes in the business, key triggers, important information that 
+ might have a material effect on next year's earnings and growth. 
+
+ !pip install PyMuPDF
+!pip install nltk
+
+
+from google.colab import files
+
+uploaded = files.upload()
+
+
+output
+
+SJS Transcript Call.pdf(application/pdf) - 1075612 bytes, last modified: 11/11/2024 - 100% done
+Saving SJS Transcript Call.pdf to SJS Transcript Call (1).pdf
+
+
+import fitz  # PyMuPDF
+
+# Function to extract text from PDF
+def extract_text_from_pdf(pdf_path):
+    text = ""
+    doc = fitz.open(pdf_path)
+    for page in doc:
+        text += page.get_text() + "\n"
+    doc.close()
+    return text
+
+# Extract text from the uploaded PDF
+pdf_text = extract_text_from_pdf("sjs_transcriptcall.pdf")
+print(pdf_text[:1000])  # Print the first 1000 characters of the text
+
+output
+
+August 03, 2023 
+To, 
+National Stock Exchange of India Limited 
+Exchange Plaza, 5th Floor, 
+Plot No. C/1, G Block, 
+Bandra – Kurla Complex, 
+Bandra (E), Mumbai -400 051 
+ 
+Symbol: SJS 
+BSE Limited 
+Corporate Relationship Department, 
+2nd Floor, New Trading Wing, 
+Rotunda Building, P.J. Towers, 
+Dalal Street, Mumbai – 400 001 
+ 
+Scrip Code: 543387 
+ 
+ISIN: INE284S01014 
+ 
+Dear Sir/Madam, 
+ 
+ 
+Subject: Transcripts of Analysts/Investor Meet/ Earnings Call of the Company pertaining to Q1 of FY 
+2023-24 
+Please find enclosed the transcripts of the Analysts/Investor Meet/ Earnings Call of Q1 FY 2023-24 held 
+on July 27, 2023. 
+ 
+You are requested to kindly take the same on record. 
+ 
+Thanking you. 
+Yours faithfully, 
+For S.J.S. Enterprises Limited 
+ 
+ 
+ 
+_______________________ 
+Thabraz Hushain W.  
+Company Secretary and Compliance Officer 
+Membership No.: A51119 
+ 
+Encl: As above 
+ 
+THABRAZ 
+HUSHAIN 
+WAJID AHMED
+Digitally signed by 
+THABRAZ HUSHAIN 
+WAJID AHMED 
+Date: 2023.08.03 
+11:16:
+
+
+import re
+import nltk
+from nltk.tokenize import sent_tokenize
+
+# Make sure to download nltk data for sentence tokenization
+nltk.download('punkt')
+
+def find_growth_prospects(text):
+    sentences = sent_tokenize(text)
+    growth_sentences = [s for s in sentences if re.search(r'\b(growth|increase|expand|forecast|prospect|outlook)\b', s, re.I)]
+    return growth_sentences
+
+def find_business_changes(text):
+    sentences = sent_tokenize(text)
+    changes_sentences = [s for s in sentences if re.search(r'\b(changes|shift|transition|strategic|initiative)\b', s, re.I)]
+    return changes_sentences
+
+def find_triggers(text):
+    sentences = sent_tokenize(text)
+    trigger_sentences = [s for s in sentences if re.search(r'\b(trigger|catalyst|event|significant)\b', s, re.I)]
+    return trigger_sentences
+
+def find_material_information(text):
+    sentences = sent_tokenize(text)
+    material_sentences = [s for s in sentences if re.search(r'\b(material|impact|earnings|effect on)\b', s, re.I)]
+    return material_sentences
+
+output
+
+Downloading package punkt to /root/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+
+
+# Extracting key information
+growth_prospects = find_growth_prospects(pdf_text)
+business_changes = find_business_changes(pdf_text)
+triggers = find_triggers(pdf_text)
+material_info = find_material_information(pdf_text)
+
+# Print the extracted information
+print("Growth Prospects:\n", "\n".join(growth_prospects[:5]), "\n")
+print("Business Changes:\n", "\n".join(business_changes[:5]), "\n")
+print("Triggers:\n", "\n".join(triggers[:5]), "\n")
+print("Material Information:\n", "\n".join(material_info[:5]), "\n")
+
+
+output
+
+
+
+
+
+
+
+Growth Prospects:
+ Sanjay will take you all through the industry view, our business performance and also give a 
+strategic outlook for the future growth of the company at the end.
+After the successful acquisition of Exotech and the robust performance we delivered there in the 
+last two years, we have gained more confidence in our execution capabilities of acquiring and 
+integrating companies that could take SJS to the next level of growth.
+With Walter Pack acquisition, we have not only acquired a very large growth and high margin 
+business at a good valuation, but at the same time achieved many key strategic objectives in 
+terms of addition of new and emerging technologies, new customers, manufacturing capabilities 
+and increase management bandwidth.
+Walter Pack Q1 witnessed a strong 
+revenue growth of 21% YoY and a robust margin performance with EBITDA margins around 
+31.5%.
+Consolidated revenues, that is SJS plus Exotech 
+together grew by 13.6% YoY on the back of strong 18.6% YoY growth in the automotive segment 
+for us, that is the two wheeler and passenger vehicles combined. 
+
+Business Changes:
+ Sanjay will take you all through the industry view, our business performance and also give a 
+strategic outlook for the future growth of the company at the end.
+With Walter Pack acquisition, we have not only acquired a very large growth and high margin 
+business at a good valuation, but at the same time achieved many key strategic objectives in 
+terms of addition of new and emerging technologies, new customers, manufacturing capabilities 
+and increase management bandwidth.
+We also extended coverage of our Swachh Bharat initiative of garbage cleanup to 5 more 
+surrounding villages, taking the total count to 12 villages.
+Amit Hiranandani: 
+One last question from my side on the standalone side, so SJS I understand is trying to acquire 
+some strategic customers which will of course benefit in the mid to long term.
+And secondly, are we going 
+to see some impact on the margins due to the strategic step and sustainability of the margin if 
+you can tell us on the annual basis for SJS standalone please? 
+
+Triggers:
+ Our organic and inorganic strategies have helped us make SJS a significant player in the 
+automotive interior space. 
+
+Material Information:
+ Towers, 
+Dalal Street, Mumbai – 400 001 
+ 
+Scrip Code: 543387 
+ 
+ISIN: INE284S01014 
+ 
+Dear Sir/Madam, 
+ 
+ 
+Subject: Transcripts of Analysts/Investor Meet/ Earnings Call of the Company pertaining to Q1 of FY 
+2023-24 
+Please find enclosed the transcripts of the Analysts/Investor Meet/ Earnings Call of Q1 FY 2023-24 held 
+on July 27, 2023.
+: A51119 
+ 
+Encl: As above 
+ 
+THABRAZ 
+HUSHAIN 
+WAJID AHMED
+Digitally signed by 
+THABRAZ HUSHAIN 
+WAJID AHMED 
+Date: 2023.08.03 
+11:16:51 +05'30'
+
+ 
+ 
+SJS Enterprises Limited 
+Q1 FY2024 Earnings Conference Call 
+ 
+July 27, 2023 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ANALYST: 
+MR. RONAK MEHTA – JM FINANCIAL 
+ 
+MANAGEMENT: MR. K.A.
+JOSEPH – MANAGING DIRECTOR & CO-FOUNDER 
+MR. SANJAY THAPAR – CEO & EXECUTIVE DIRECTOR 
+MR. MAHENDRA NAREDI – CHIEF FINANCIAL OFFICER 
+MS. DEVANSHI DHRUVA – HEAD – INVESTOR  RELATIONS 
+ 
+ 
+ 
+
+ 
+SJS Enterprises 
+July 27, 2023 
+ 
+Moderator: 
+Ladies and gentlemen, good day and welcome to the SJS Enterprises 1Q FY24 Earnings 
+Conference Call hosted by JM Financial.
+Ronak Mehta: 
+From JM Financial Institutional Securities, I welcome you all to 1Q FY24 Earnings Call of SJS 
+Enterprises.
+These initiatives make us feel very proud that our 
+CSR initiatives are bringing about a definitive change and creating a positive impact in the 
+society, be it in healthcare, sanitation, sports education, rural development around the 
+community. 
+
+
+
+
